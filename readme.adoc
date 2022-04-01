@@ -2,23 +2,47 @@
 
 Install OpenShift 4.10.0 on Azure, AWS or GCP (or anywhere you have the authority and credit limit to do so)
 
+image::./images/ocp-1.png[][OpenShift]
 
+Scale up MachineSets to have enough cores to load everything in.   Just click on the name of the machineset and +1. If you are monitoring your Azure, AWS or GCP console you will see a new VM spring to life.  It takes several minutes to provison the new worker node.
 
-Scale up MachineSets to have enough cores to load everything in.  
-
-image::./images/acm-argocd-0.png[][MachineSets]
+image::./images/ocp-2.png[][MachineSets]
 
 ## ACM + Gitops
 Install ACM Operator
 
+image::./images/ocp-3.png[][Operator Catalog]
+
+image::./images/ocp-4.png[][Install Button]
+
+image::./images/ocp-5.png[][Install Button Again]
+
+
+
 Install GitOps Operator
+
+image::./images/ocp-6.png[][Operator Catalog: gitops]
+
+Follow the same steps as the ACM Operator
+
+Select All Projects and see the Installed Operators
 
 image::./images/acm-argocd-1.png[][Installed Operators]
 
-Create a MCH in the open-cluster-management namespace
+Switch to the open-cluster-management project/namespace. 
+
+
+Create a MulticlusterHub by clicking on the link
+
+image::./images/acm-argocd-1-1.png[][MulticlusterHub]
+
+And click the "Create MultiClusterHub" button
+
+image::./images/acm-argocd-1-2.png[][MulticlusterHub]
+
+And one more Create button
 
 image::./images/acm-argocd-2.png[][Create MCH]
-
 
 Lots of pods show up inside of the namespace open-cluster-management
 ----
@@ -81,34 +105,48 @@ submariner-addon-6cdb45fb55-4wch7                                 1/1     Runnin
 ----
 
 
-If you go into Advanced Cluster Management and the Applications section, click on Create, you will see the ArgoCD ApplicationSet is disabled
+Wait just a few moments, refresh the browser then a new menu will appear
+
+image::./images/acm-argocd-2-1.png[][ACM Menu]
+
+Note: It is NOT this menu option, it is confusing
+
+
+image::./images/acm-argocd-2-2.png[][OCM Menu]
+
+
+The main screen of ACM
+
+image::./images/acm-argocd-2-3.png[][ACM Welcome]
+
+and the Applications section, click on Create, you will see the ArgoCD ApplicationSet is disabled
 
 image::./images/acm-argocd-3.png[][Applications in ACM]
 
 There are some steps needed to get ArgoCD configured with ACM.  Back in the OpenShift Console - Administrator View, select the project (namespace) called "OpenShift-gitops" and Installed Operators
 
+image::./images/acm-argocd-3-1.png[][Applications in ACM]
+
+
 image::./images/acm-argocd-4.png[][Installed Operators]
 
 And visit the ArgoCD UI
+
 image::./images/acm-argocd-5.png[][Menu for the ArgoCD Console]
 
-And into the Settings and Clusters
+And into the Settings and Clusters.  We need to add the main/hub cluster as a target for applications cluster, a managed cluster, a spoke
+
 image::./images/acm-argocd-6.png[][Settings & Clusters]
 
 
-Normally when working with the ArgoCD Hub you have to add your managed clusters (spokes) to it via a command like
-----
-argocd cluster add --kubeconfig $KUBECONFIG do-ams3-ams3-kubernetes --name amsterdam
-----
-
 You can simply just add the main/current cluster as a spoke/managed cluster but using a different technique.
 
-
 ----
+git clone https://github.com/burrsutter/acm-argocd
+cd acm-argocd
 kubectl apply -f managedclusterset.yaml -n openshift-gitops
 kubectl apply -f gitopscluster.yaml -n openshift-gitops
 ----
-
 
 ----
 kubectl get managedcluster -n open-cluster-management
