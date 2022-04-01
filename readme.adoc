@@ -117,9 +117,9 @@ Add a label to the local-cluster managed cluster
 ----
 kubectl label managedcluster local-cluster usage=production -n open-cluster-management
 # or
-kubectl label managedcluster local-cluster cluster.open-cluster-management.io/clusterse=all-openshift-clusters
+kubectl label managedcluster local-cluster cluster.open-cluster-management.io/clusterset=all-openshift-clusters
 # or
-kubectl label managedcluster local-cluster cluster.open-cluster-management.io/clusterse=all-clusters
+kubectl label managedcluster local-cluster cluster.open-cluster-management.io/clusterset=all-clusters --overwrite
 ----
 
 Check that the label applied
@@ -129,13 +129,22 @@ NAME            HUB ACCEPTED   MANAGED CLUSTER URLS                    JOINED   
 local-cluster   true           https://api.iowa.burr-on-gcp.com:6443   True     True        7h48m
 ----
 
+OR
+----
+kubectl get managedcluster -l cluster.open-cluster-management.io/clusterset=all-clusters -n open-cluster-management
+
+NAME            HUB ACCEPTED   MANAGED CLUSTER URLS                    JOINED   AVAILABLE   AGE
+local-cluster   true           https://api.iowa.burr-on-gcp.com:6443   True     True        22h
+----
+
 
 Check the Placement
 
 ----
 kubectl get placement
-NAME            SUCCEEDED   REASON                       SELECTEDCLUSTERS
-local-cluster   False       AllManagedClusterSetsEmpty   0----
+NAME            SUCCEEDED   REASON                  SELECTEDCLUSTERS
+local-cluster   True        AllDecisionsScheduled   1
+
 ----
 
 
