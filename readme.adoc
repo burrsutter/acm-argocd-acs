@@ -147,6 +147,17 @@ local-cluster   True        AllDecisionsScheduled   1
 
 ----
 
+Check the ACM Console and Clusters
+
+image::./images/acm-argocd-7.png[][ACM Clusters]
+
+Check the Cluster Sets
+
+image::./images/acm-argocd-8.png[][Cluster Sets]
+
+Now Argo CD ApplicationSet should be Enabled
+
+image::./images/acm-argocd-9.png[][Cluster Sets]
 
 
 
