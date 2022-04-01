@@ -192,6 +192,51 @@ argocd app list
 NAME  CLUSTER  NAMESPACE  PROJECT  STATUS  HEALTH  SYNCPOLICY  CONDITIONS  REPO  PATH  TARGET
 ----
 
+Apply the acm-applicationset.yaml
+----
+kubectl apply -f acm-applicationset.yaml -n openshift-gitops
+----
+
+----
+argocd app list
+NAME                 CLUSTER                                NAMESPACE  PROJECT  STATUS     HEALTH   SYNCPOLICY  CONDITIONS  REPO                                          PATH                            TARGET
+local-cluster-myapp  https://api.iowa.burr-on-gcp.com:6443  mystuff    default  OutOfSync  Missing  Auto-Prune  <none>      https://github.com/burrsutter/acm-argocd.git  mystuff/overlays/local-cluster  main
+----
+
+If you look quickly it won't be synced
+
+image::./images/acm-argocd-11.png[][ArgoCD Console]
+
+image::./images/acm-argocd-12.png[][ACM Application Console]
+
+----
+argocd app list
+NAME                 CLUSTER                                NAMESPACE  PROJECT  STATUS  HEALTH   SYNCPOLICY  CONDITIONS  REPO                                          PATH                            TARGET
+local-cluster-myapp  https://api.iowa.burr-on-gcp.com:6443  mystuff    default  Synced  Healthy  Auto-Prune  <none>      https://github.com/burrsutter/acm-argocd.git  mystuff/overlays/local-cluster  main
+----
+
+And it should eventually sync
+
+image::./images/acm-argocd-13.png[][ArgoCD Console]
+
+And be deployed into "mystuff"
+
+----
+kubectl get pods -n mystuff
+NAME                     READY   STATUS    RESTARTS   AGE
+myapp-74d59bc754-wt748   1/1     Running   0          75s
+----
+
+----
+kubectl get services -n mystuff
+NAME    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+myapp   LoadBalancer   172.30.29.178   34.69.72.59   8080:30225/TCP   90s
+----
+
+----
+curl 34.69.72.59:8080
+localz only via Quarkus 1 on myapp-74d59bc754-wt748
+----
 
 
 
