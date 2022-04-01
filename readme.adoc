@@ -411,7 +411,7 @@ scanner-db-77dd49d98-bn7x9   1/1     Running   0          83s
 
 Check on the MachineSets
 
-image::./images/acm-argocd-0.png[][MachineSets]
+image::./images/ocp-2.png[][MachineSets]
 
 Adding workers
 
