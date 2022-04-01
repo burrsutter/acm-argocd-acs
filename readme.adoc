@@ -1,6 +1,8 @@
 # ACM + ArgoCD (Gitops) + ACS
 
-Install OpenShift 4.10.0-rc.1
+Install OpenShift 4.10.0 on Azure, AWS or GCP (or anywhere you have the authority and credit limit to do so)
+
+
 
 Scale up MachineSets to have enough cores to load everything in.  
 
@@ -157,7 +159,14 @@ image::./images/acm-argocd-8.png[][Cluster Sets]
 
 Now Argo CD ApplicationSet should be Enabled
 
-image::./images/acm-argocd-9.png[][Cluster Sets]
+image::./images/acm-argocd-9.png[][Argo CD ApplicationSet]
+
+Select that option
+
+image::./images/acm-argocd-10.png[][Argo CD ApplicationSet Wizard]
+
+
+Login using the arogocd CLI, where ARGOCD_PASS is equal the one generated at overall OCP installation time
 
 
 
