@@ -382,6 +382,13 @@ Login with "admin" and the password extracted above and voila!
 
 image::./images/acs-8.png[][ACS Central]
 
+Go to Compliance
+
+image::./images/acs-9.png[][Go to Compliance]
+
+Scan Environment
+
+image::./images/acs-10.png[][Scan Environment]
 
 
 ## Troubleshooting
