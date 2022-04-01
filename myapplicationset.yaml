@@ -18,7 +18,7 @@ spec:
           prune: true
           selfHeal: true
       source:
-        repoURL: https://github.com/burrsutter/doks-argocd.git
+        repoURL: https://github.com/burrsutter/acm-argocd.git
         targetRevision: main
         path: 'mystuff/overlays/{{name}}'
       destination:

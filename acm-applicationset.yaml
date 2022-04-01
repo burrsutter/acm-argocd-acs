@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: myapp
+  namespace: openshift-gitops
+spec:
+  generators:
+    - clusterDecisionResource:
+        configMapRef: acm-placementrule
+        name: myapp-placement
+        requeueAfterSeconds: 30
+  template:     
+    metadata:
+      name: '{{name}}-myapp'
+    spec:
+      project: "default"
+      source:
+        repoURL: https://github.com/burrsutter/acm-argocd.git
+        targetRevision: main
+        path: 'mystuff/overlays/{{name}}'
+      destination:
+        server: '{{server}}'
+        namespace: mystuff
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: false
+        syncOptions:
+          - CreateNamespace=true
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: myapp-placement
+  namespace: openshift-gitops
+spec:
+  clusterReplicas: 1   # Availability choice, maximum number of clusters to provision at once
+  clusterSelector:
+    matchLabels:
+      'usage': 'production'
+  clusterConditions:
+    - type: ManagedClusterConditionAvailable
+      status: "True"

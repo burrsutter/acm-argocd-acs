@@ -165,8 +165,33 @@ Select that option
 
 image::./images/acm-argocd-10.png[][Argo CD ApplicationSet Wizard]
 
+But let's ignore the Wizard and back to the command line
 
-Login using the arogocd CLI, where ARGOCD_PASS is equal the one generated at overall OCP installation time
+Login using the arogocd CLI but you have to extract the CLI password from the secret 
+
+----
+oc extract secret/openshift-gitops-cluster -n openshift-gitops --to=-
+# admin.password
+QUkcM6KW9Z7wjf3pAaRbqGF8IitdrhND
+----
+
+----
+ARGOCD_URL=$(kubectl get route openshift-gitops-server -n openshift-gitops -o jsonpath="{.status.ingress[0].host}")
+argocd login --insecure --grpc-web $ARGOCD_URL  --username admin --password QUkcM6KW9Z7wjf3pAaRbqGF8IitdrhND
+----
+
+----
+argocd cluster list
+SERVER                                 NAME           VERSION  STATUS      MESSAGE                                              PROJECT
+https://api.iowa.burr-on-gcp.com:6443  local-cluster  1.23     Successful
+https://kubernetes.default.svc         in-cluster              Unknown     Cluster has no application and not being monitored.
+----
+
+----
+argocd app list
+NAME  CLUSTER  NAMESPACE  PROJECT  STATUS  HEALTH  SYNCPOLICY  CONDITIONS  REPO  PATH  TARGET
+----
+
 
 
 
