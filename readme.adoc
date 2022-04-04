@@ -382,13 +382,88 @@ Login with "admin" and the password extracted above and voila!
 
 image::./images/acs-8.png[][ACS Central]
 
-Go to Compliance
+You will notice that there is no data in the dashboards.  We next have to include a "secured cluster" in the overall mix.  The good news is that the Central/Hub cluster can also work as a "secured cluster".  This concept is like ACM's "managed cluster".
 
-image::./images/acs-9.png[][Go to Compliance]
+
+Inside that Central console, go to Platform Configuration, Integrations then scroll to the bottom, click on Helm Cluster Init Bundle
+
+image::./images/acs-9.png[][Platform Configuration, Integrations]
+
+Click on "Generate bundle"
+
+image::./images/acs-10.png[][Generate bundle]
+
+Enter a name like "myinitbundle" and click Generate button
+
+image::./images/acs-11.png[][myinitbundle]
+
+Click on Download Kubernetes Secret File to download
+
+image::./images/acs-12.png[][Download Kubernetes Secret File]
+
+On the Central cluster, apply this generated .yaml
+----
+kubectl apply -f ~/Downloads/myinitbundle-cluster-init-secrets.yaml -n stackrox
+secret/collector-tls created
+secret/sensor-tls created
+secret/admission-control-tls created
+----
+
+Now, back to the main OpenShift Console for Central, project stackrox, Installed Operators.
+
+Click on Secured Cluster
+
+image::./images/acs-13.png[][OpenShift Console - Installed Operators] 
+
+and then Create SecuredCluster
+
+image::./images/acs-14.png[][Create SecuredCluster] 
+
+Give it the name "local-cluster" and the Central Endpoint comes from
+
+----
+kubectl -n stackrox get route central -o jsonpath="{.status.ingress[0].host}"
+----
+
+image::./images/acs-15.png[][Central Endpoint] 
+
+
+Scroll down, taking the default values and clicking the Create button
+
+image::./images/acs-16.png[][Create] 
+
+Check to see if new pods have been started inside of the stackrox namespace
+
+----
+kubectl get pods -n stackrox
+NAME                                 READY   STATUS    RESTARTS      AGE
+admission-control-6f6fd7c7f7-2xlf5   0/1     Running   0             2m19s
+admission-control-6f6fd7c7f7-69xbj   0/1     Running   0             2m19s
+admission-control-6f6fd7c7f7-gjhrf   0/1     Running   0             2m19s
+central-6b96668d45-9rsqj             1/1     Running   0             2d18h
+collector-444p8                      2/2     Running   0             2m19s
+collector-7rzdg                      2/2     Running   0             2m19s
+collector-85nc7                      2/2     Running   0             2m19s
+collector-kpfrk                      2/2     Running   0             2m19s
+collector-qrhkb                      2/2     Running   0             2m19s
+collector-r8p6b                      2/2     Running   0             2m19s
+collector-rxwhz                      2/2     Running   0             2m19s
+collector-vsjnw                      2/2     Running   0             2m19s
+scanner-7d77d75f6c-vhs2q             1/1     Running   0             2d18h
+scanner-7d77d75f6c-zw2dw             1/1     Running   0             2d18h
+scanner-db-77dd49d98-bn7x9           1/1     Running   0             2d18h
+sensor-7f4b4b9bf4-cn4bg              0/1     Error     4 (85s ago)   2m19s
+----
+
+Back on ACS Central UI, Go to Compliance
+
+image::./images/acs-19.png[][Go to Compliance]
 
 Scan Environment
 
-image::./images/acs-10.png[][Scan Environment]
+image::./images/acs-20.png[][Scan Environment]
+
+
 
 
 ## Troubleshooting
@@ -418,3 +493,10 @@ Adding workers
 image::./images/troubleshooting-2.png[][Add Worker]
 
 And remember it can take up to 10 minutes to bring a new worker node online, it all depends on the cloud provider + region + the combo's network performance + which specific node you are assigned to and many other factors
+
+
+Also check events as there might be some hints as to the reasons why something is failing/pending
+
+----
+kubectl get events --sort-by=.metadata.creationTimestamp
+----
