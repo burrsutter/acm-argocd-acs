@@ -5,3 +5,15 @@ oc new-project finance
 oc adm policy add-scc-to-user -z privileged default
 kubectl apply -f minerd-deployment.yaml
 ----
+
+
+----
+oc new-project devops
+kubectl apply -f log4shellapp.yaml
+----
+
+----
+git clone https://github.com/burrsutter/ansible-demo
+# do what readme.md says
+docker-compose run ansible-demo-build
+----
