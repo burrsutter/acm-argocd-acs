@@ -1,0 +1,7 @@
+= Deployments with CVEs/Errors
+
+----
+oc new-project finance
+oc adm policy add-scc-to-user -z privileged default
+kubectl apply -f minerd-deployment.yaml
+----

@@ -308,6 +308,74 @@ ToDo: Add more clusters
 
 
 ## ACS/StackRox
+
+#### Automated Installation
+
+----
+git clone https://github.com/redhat-cop/gitops-catalog
+cd advanced-cluster-security-operator
+oc apply -k advanced-cluster-security-operator/operator/overlays/latest
+----
+
+and wait a bit
+
+----
+watch kubectl get pods -n openshift-operators
+NAME                                                 READY   STATUS    RESTARTS   AGE
+rhacs-operator-controller-manager-76b86498df-99nxm   2/2     Running   0          4m14s
+----
+
+Then
+
+----
+oc apply -k advanced-cluster-security-operator/instance/overlays/default
+----
+
+and wait a bit
+
+----
+watch kubectl get pods -n stackrox
+NAME                                 READY   STATUS      RESTARTS   AGE
+admission-control-6555698c7d-bgz6d   1/1     Running     0          6m38s
+admission-control-6555698c7d-bz85d   1/1     Running     0          6m38s
+admission-control-6555698c7d-ws2vz   1/1     Running     0          6m38s
+central-69f695646b-knxv6             1/1     Running     0          7m30s
+collector-6gssh                      2/2     Running     0          6m38s
+collector-7h8sf                      2/2     Running     0          6m38s
+collector-7m5mm                      2/2     Running     0          6m38s
+collector-ts4ml                      2/2     Running     0          6m38s
+collector-w6drv                      2/2     Running     0          6m38s
+collector-x8s2q                      2/2     Running     0          6m38s
+create-cluster-init-bundle-cfsm6     0/1     Completed   0          7m56s
+scanner-55d9cb8b8-dbsjz              1/1     Running     0          7m30s
+scanner-55d9cb8b8-j5x69              1/1     Running     0          7m30s
+scanner-db-585c856476-4vdqt          1/1     Running     0          7m30s
+sensor-6bcc4-4qbdj                   1/1     Running     0          6m38s
+----
+
+A job named create-cluster-init-bundle makes the single Central cluster a SecuredCluster as well
+
+Get the URL to ACS Central
+
+----
+CENTRAL_URL=https://$(kubectl -n stackrox get route central -o jsonpath="{.status.ingress[0].host}")
+open $CENTRAL_URL
+----
+
+
+and get the admin password
+
+----
+CENTRAL_PASSWORD=$(kubectl -n stackrox get secret central-htpasswd -o go-template='{{index .data "password" | base64decode}}')
+echo $CENTRAL_PASSWORD
+----
+
+image::./images/acs-auto-1.png[][ACS Central]
+
+#### GUI/Manual Installation
+Note: The installation path below does NOT work at this time
+
+
 Install Operator
 
 Go to the OperatorHub, select Advanced Cluster Security for Kubernetes, click Install 2 times.
