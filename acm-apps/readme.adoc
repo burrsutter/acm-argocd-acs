@@ -1,0 +1,144 @@
+## ACM Applications
+
+ACM Apps are meant to be "pushed from" ACM Hub out to the spokes
+
+image::./images/acm-apps-1.png[][Applications]
+
+image::./images/acm-apps-2.png[][Subscription]
+
+*Name:* book-import 
+
+*Namespace:* book-import 
+
+Under repository types, select the GIT repository
+
+Better if you fork this one and make it your own
+
+https://github.com/burrsutter/book-import
+
+image::./images/acm-apps-3.png[][Name, Namespace]
+
+*Branch:*  master-no-pre-post
+
+*Path:*  book-import
+
+image::./images/acm-apps-4.png[][Branch, Path]
+
+Select Deploy application resources only on clusters matching specified labels
+
+*Label:* environment
+
+*Value:* dev
+
+image::./images/acm-apps-5.png[][Label]
+
+The overall Yaml
+
+----
+apiVersion: v1                    
+kind: Namespace
+metadata:
+  name: book-import                             
+---
+apiVersion: app.k8s.io/v1beta1
+kind: Application
+metadata:
+  name: book-import
+  namespace: book-import
+spec:
+  componentKinds:
+  - group: apps.open-cluster-management.io
+    kind: Subscription
+  descriptor: {}
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: 
+          - book-import
+---
+apiVersion: v1                      
+kind: Namespace
+metadata:
+  name: ggithubcom-burrsutter-book-import-ns
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: Channel
+metadata:
+  annotations:
+    apps.open-cluster-management.io/reconcile-rate: medium
+  name: ggithubcom-burrsutter-book-import
+  namespace: ggithubcom-burrsutter-book-import-ns
+spec:
+  type: Git
+  pathname: 'https://github.com/burrsutter/book-import'
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: Subscription
+metadata:
+  annotations:
+    apps.open-cluster-management.io/git-branch: master-no-pre-post
+    apps.open-cluster-management.io/git-path: book-import
+    apps.open-cluster-management.io/reconcile-option: merge
+  labels:
+    app: book-import
+  name: book-import-subscription-1
+  namespace: book-import
+spec:
+  channel: ggithubcom-burrsutter-book-import-ns/ggithubcom-burrsutter-book-import
+  placement:
+    placementRef:
+      kind: PlacementRule
+      name: book-import-placement-1
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  labels:
+    app: book-import
+  name: book-import-placement-1
+  namespace: book-import
+spec:
+  clusterSelector:
+    matchLabels:
+      'environment': 'dev'
+
+----
+
+and Click Save
+
+image::./images/acm-apps-6.png[][App Topology]
+
+And notice the placement rule red X
+
+image::./images/acm-apps-7.png[][Placement Rule]
+
+Go back to the cluster you wish to target and add the Label
+
+image::./images/acm-apps-8.png[][Edit Labels]
+
+image::./images/acm-apps-9.png[][Add Labels]
+
+Hit Return
+
+image::./images/acm-apps-10.png[][Add Labels]
+
+and click Save and jump back to the Application Topology
+
+image::./images/acm-apps-11.png[][Healed Placement Rule]
+
+Click on Route
+
+image::./images/acm-apps-12.png[][Route]
+
+And the resulting application
+
+image::./images/acm-apps-13.png[][Books]
+
+
+
+
+
+
+
+
