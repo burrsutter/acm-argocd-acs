@@ -1,0 +1,9 @@
+### Provisionging Clusters
+
+
+First add the cloud credentials needed
+
+image::./images/acm-clusters-1.png[][Add Credential]
+
+image::./images/acm-clusters-2.png[][Pick your cloud]
+
