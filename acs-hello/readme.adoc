@@ -1,5 +1,8 @@
 #### Automated Installation
 
+An excellent video of you need an introduction to what Advanced Cluster Security is at 
+https://www.youtube.com/watch?v=k1jO8iYgPkY[Video Overview]
+
 ----
 git clone https://github.com/redhat-cop/gitops-catalog
 cd advanced-cluster-security-operator

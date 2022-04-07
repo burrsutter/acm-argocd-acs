@@ -311,6 +311,7 @@ ToDo: Add more clusters
 
 Go see the acs-hello readme.adoc
 
+https://github.com/burrsutter/acm-argocd-acs/tree/main/acs-hello[ACS Installation]
 
 ## Troubleshooting
 
