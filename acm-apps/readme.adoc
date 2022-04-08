@@ -135,10 +135,32 @@ And the resulting application
 
 image::./images/acm-apps-13.png[][Books]
 
+## Lots of ACM Applications
 
+image::./images/acm-apps-14.png[][Lots of Apps]
 
+Fork https://github.com/burrsutter/lotsofapps
 
+----
+git clone https://github.com/burrsutter/lotsofapps
 
+cd lotsofapps
 
-
+kubectl apply -k acm-manifests/accounting/
+kubectl apply -k acm-manifests/accounts-receivable/
+kubectl apply -k acm-manifests/client-onboarding/
+kubectl apply -k acm-manifests/credit-initiation/
+kubectl apply -k acm-manifests/currency-exchange/
+kubectl apply -k acm-manifests/distribution/
+kubectl apply -k acm-manifests/finance/
+kubectl apply -k acm-manifests/fraud-detection/
+kubectl apply -k acm-manifests/human-capital/
+kubectl apply -k acm-manifests/logistics/
+kubectl apply -k acm-manifests/manufacturing/
+kubectl apply -k acm-manifests/mastercard-processor/
+kubectl apply -k acm-manifests/plant-maintenance/
+kubectl apply -k acm-manifests/production-planning/
+kubectl apply -k acm-manifests/sales/
+kubectl apply -k acm-manifests/visa-processor/
+----
 
