@@ -19,6 +19,8 @@ Importing of clusters such as GKE, AKS, EKS or DOKS
 
 #### Create Spoke Clusters
 
+Digital Ocean Kubernetes Service (DOKS)
+
 ----
 doctl kubernetes cluster create blr1-kubernetes --region blr1 --node-pool="name=worker-pool;count=2"
 export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-blr1
@@ -27,6 +29,8 @@ doctl k8s cluster kubeconfig show blr1-kubernetes >> $KUBECONFIG
 doctl kubernetes cluster list
 ----
 
+Google Kubernetes Engine (GKE)
+
 ----
 export KUBECONFIG=/Users/burr/xKS/.kubeconfig/gke1
 
@@ -34,15 +38,6 @@ gcloud container clusters create gke1 --zone us-central1-c --project alohaburr
 gcloud container clusters get-credentials gke1 --zone us-central1-c --project alohaburr
 
 gcloud container clusters list --project alohaburr
-
-# or
-
-export KUBECONFIG=/Users/burr/xKS/.kubeconfig/gke1
-
-gcloud container clusters create frankfurt --zone europe-west3-a --node-pool default-pool --num-nodes 3
-gcloud container clusters get-credentials frankfurt --zone europe-west3-a
-
-gcloud container clusters list
 ----
 
 #### Pull Secret
@@ -174,6 +169,8 @@ klusterlet-b48d64b8c-nzf46                       1/1     Running   0            
 klusterlet-registration-agent-5c587fb9c7-v9g24   1/1     Running   0              111s
 klusterlet-work-agent-8ddd945f8-zt44p            1/1     Running   1 (101s ago)   111s
 ----
+
+Note: You might see a temporary ErrImagePull
 
 watch kubectl get pods -n open-cluster-management-agent-addon
 
@@ -365,3 +362,32 @@ https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_managemen
 https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.1/html/manage_cluster/importing-a-target-managed-cluster-to-the-hub-cluster#importing-an-existing-cluster-with-the-console
 
 https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.4/html/install/installing#advanced-config-hub
+
+
+#### Extras
+
+----
+kubectl label managedcluster blr1 cloud=Amazon
+----
+
+----
+export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-ams3
+doctl kubernetes cluster create ams3-kubernetes --region ams3 --node-pool="name=worker-pool;count=2"
+
+export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-lon1
+doctl kubernetes cluster create lon1-kubernetes --region lon1 --node-pool="name=worker-pool;count=2"
+
+export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-sgp1
+doctl kubernetes cluster create sgp1-kubernetes --region sgp1 --node-pool="name=worker-pool;count=2"
+----
+
+----
+# not tested
+export KUBECONFIG=/Users/burr/xKS/.kubeconfig/frankfurt
+
+gcloud container clusters create frankfurt --zone europe-west3-a --node-pool default-pool --num-nodes 1
+gcloud container clusters get-credentials frankfurt --zone europe-west3-a
+
+gcloud container clusters list
+----
+
