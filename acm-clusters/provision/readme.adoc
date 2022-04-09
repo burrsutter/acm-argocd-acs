@@ -1,4 +1,4 @@
-### Provisionging Clusters
+### Provisioning Clusters
 
 
 First add the cloud credentials needed

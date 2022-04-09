@@ -164,3 +164,17 @@ kubectl apply -k acm-manifests/sales/
 kubectl apply -k acm-manifests/visa-processor/
 ----
 
+These ACM Apps need two namespaces.  
+
+The main namespace will hold:
+
+. Application
+. PlacementRule
+. Subscription
+. Deployment, Service, Ingress/Route, CM, etc 
+
+While the Channel namespace simply holds the Channel custom resource as that would be shared amongst many possible subscribers
+
+
+
+
