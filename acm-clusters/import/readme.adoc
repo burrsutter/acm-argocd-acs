@@ -80,130 +80,6 @@ spec:
 EOF
 ----
 
-#### Create the ManagedCluster for GKE1
-
-----
-kubectl create namespace gke1
-kubectl label namespace gke1 cluster.open-cluster-management.io/managedCluster=gke1
-----
-
-----
-cat <<EOF | kubectl -n gke1 apply -f -
-apiVersion: cluster.open-cluster-management.io/v1
-kind: ManagedCluster
-metadata:
-  name: gke1
-spec:
-  hubAcceptsClient: true
-EOF
-----
-
-You should see "Pending Import"
-
-image::./images/acm-import-2.png[][Pending Import]
-
-Check your ManagedClusters
-
-----
-kubectl get managedcluster
-NAME            HUB ACCEPTED   MANAGED CLUSTER URLS                    JOINED   AVAILABLE   AGE
-gke1            true                                                                        42s
-local-cluster   true           https://api.iowa.burr-on-gcp.com:6443   True     True        104m
-----
-
-Create the KlusterletAddonConfig
-
-----
-cat <<EOF | kubectl -n gke1 apply -f -
-apiVersion: agent.open-cluster-management.io/v1
-kind: KlusterletAddonConfig
-metadata:
-  name: gke1
-  namespace: gke1
-spec:
-  clusterName: gke1
-  clusterNamespace: gke1
-  applicationManager:
-    enabled: true
-  certPolicyController:
-    enabled: true
-  clusterLabels:
-    cloud: auto-detect
-    vendor: auto-detect
-  iamPolicyController:
-    enabled: true
-  policyController:
-    enabled: true
-  searchCollector:
-    enabled: true
-  version: 2.1.0
-EOF
-----
-
-Extract the artifacts to be applied to the gke1 spoke cluster
-
-----
-kubectl get secret gke1-import -n gke1 -o jsonpath={.data.crds\\.yaml} | base64 --decode > $HOME/gke1-klusterlet-crd.yaml
-----
-
-----
-kubectl get secret gke1-import -n gke1 -o jsonpath={.data.import\\.yaml} | base64 --decode > $HOME/gke1-import.yaml
-----
-
-#### Update the GKE1 Cluster
-
-Double check you are connected to the correct spoke cluster
-
-----
-gcloud container clusters list --project alohaburr
-NAME  LOCATION       MASTER_VERSION   MASTER_IP     MACHINE_TYPE  NODE_VERSION     NUM_NODES  STATUS
-gke1  us-central1-c  1.21.6-gke.1503  35.225.97.90  e2-medium     1.21.6-gke.1503  3          RUNNING
-----
-
-----
-kubectl cluster-info
-Kubernetes control plane is running at https://35.225.97.90
-GLBCDefaultBackend is running at https://35.225.97.90/api/v1/namespaces/kube-system/services/default-http-backend:http/proxy
-KubeDNS is running at https://35.225.97.90/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-Metrics-server is running at https://35.225.97.90/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
-----
-
-Apply the CRD 
-
-----
-kubectl apply -f $HOME/gke1-klusterlet-crd.yaml
-----
-
-Apply the import for the agent to the 
-
-----
-kubectl apply -f $HOME/gke1-import.yaml
-----
-
-----
-watch kubectl get pods -n open-cluster-management-agent
-NAME                                            READY   STATUS    RESTARTS   AGE
-klusterlet-b48d64b8c-phxv2                      1/1     Running   0          36s
-klusterlet-registration-agent-66f65d568-mhfnc   1/1     Running   0          24s
-klusterlet-work-agent-65f6477d7-pmhcp           1/1     Running   0          24s
-----
-
-----
-watch kubectl get pods -n open-cluster-management-agent-addon
-NAME                                                        READY   STATUS    RESTARTS   AGE
-klusterlet-addon-appmgr-5bf88c5f4b-r8qms                    1/1     Running   0          41s
-klusterlet-addon-certpolicyctrl-6c78f96d88-mwhgk            1/1     Running   0          40s
-klusterlet-addon-iampolicyctrl-7774d5f858-4mmmx             1/1     Running   0          41s
-klusterlet-addon-operator-8568585f58-r8sgg                  1/1     Running   0          73s
-klusterlet-addon-policyctrl-config-policy-cfcbcd7fd-s2btc   1/1     Running   0          40s
-klusterlet-addon-policyctrl-framework-d8998884-9lf2v        3/3     Running   0          40s
-klusterlet-addon-search-755665bb5f-jlpj4                    1/1     Running   0          39s
-klusterlet-addon-workmgr-5cf6cd4955-r579w                   1/1     Running   0          38s
-----
-
-image::./images/acm-import-5.png[][Ready]
-
-
 #### Create the ManagedCluster for BLR1 (DOKS)
 
 ----
@@ -341,6 +217,129 @@ kubectl get pods -n accounting
 NAME                          READY   STATUS    RESTARTS   AGE
 accounting-69bc96bcfd-l74f5   1/1     Running   0          69s
 ----
+
+#### Create the ManagedCluster for GKE1
+
+----
+kubectl create namespace gke1
+kubectl label namespace gke1 cluster.open-cluster-management.io/managedCluster=gke1
+----
+
+----
+cat <<EOF | kubectl -n gke1 apply -f -
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  name: gke1
+spec:
+  hubAcceptsClient: true
+EOF
+----
+
+You should see "Pending Import"
+
+image::./images/acm-import-2.png[][Pending Import]
+
+Check your ManagedClusters
+
+----
+kubectl get managedcluster
+NAME            HUB ACCEPTED   MANAGED CLUSTER URLS                    JOINED   AVAILABLE   AGE
+gke1            true                                                                        42s
+local-cluster   true           https://api.iowa.burr-on-gcp.com:6443   True     True        104m
+----
+
+Create the KlusterletAddonConfig
+
+----
+cat <<EOF | kubectl -n gke1 apply -f -
+apiVersion: agent.open-cluster-management.io/v1
+kind: KlusterletAddonConfig
+metadata:
+  name: gke1
+  namespace: gke1
+spec:
+  clusterName: gke1
+  clusterNamespace: gke1
+  applicationManager:
+    enabled: true
+  certPolicyController:
+    enabled: true
+  clusterLabels:
+    cloud: auto-detect
+    vendor: auto-detect
+  iamPolicyController:
+    enabled: true
+  policyController:
+    enabled: true
+  searchCollector:
+    enabled: true
+  version: 2.1.0
+EOF
+----
+
+Extract the artifacts to be applied to the gke1 spoke cluster
+
+----
+kubectl get secret gke1-import -n gke1 -o jsonpath={.data.crds\\.yaml} | base64 --decode > $HOME/gke1-klusterlet-crd.yaml
+----
+
+----
+kubectl get secret gke1-import -n gke1 -o jsonpath={.data.import\\.yaml} | base64 --decode > $HOME/gke1-import.yaml
+----
+
+#### Update the GKE1 Cluster
+
+Double check you are connected to the correct spoke cluster
+
+----
+gcloud container clusters list --project alohaburr
+NAME  LOCATION       MASTER_VERSION   MASTER_IP     MACHINE_TYPE  NODE_VERSION     NUM_NODES  STATUS
+gke1  us-central1-c  1.21.6-gke.1503  35.225.97.90  e2-medium     1.21.6-gke.1503  3          RUNNING
+----
+
+----
+kubectl cluster-info
+Kubernetes control plane is running at https://35.225.97.90
+GLBCDefaultBackend is running at https://35.225.97.90/api/v1/namespaces/kube-system/services/default-http-backend:http/proxy
+KubeDNS is running at https://35.225.97.90/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://35.225.97.90/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+----
+
+Apply the CRD 
+
+----
+kubectl apply -f $HOME/gke1-klusterlet-crd.yaml
+----
+
+Apply the import for the agent to the 
+
+----
+kubectl apply -f $HOME/gke1-import.yaml
+----
+
+----
+watch kubectl get pods -n open-cluster-management-agent
+NAME                                            READY   STATUS    RESTARTS   AGE
+klusterlet-b48d64b8c-phxv2                      1/1     Running   0          36s
+klusterlet-registration-agent-66f65d568-mhfnc   1/1     Running   0          24s
+klusterlet-work-agent-65f6477d7-pmhcp           1/1     Running   0          24s
+----
+
+----
+watch kubectl get pods -n open-cluster-management-agent-addon
+NAME                                                        READY   STATUS    RESTARTS   AGE
+klusterlet-addon-appmgr-5bf88c5f4b-r8qms                    1/1     Running   0          41s
+klusterlet-addon-certpolicyctrl-6c78f96d88-mwhgk            1/1     Running   0          40s
+klusterlet-addon-iampolicyctrl-7774d5f858-4mmmx             1/1     Running   0          41s
+klusterlet-addon-operator-8568585f58-r8sgg                  1/1     Running   0          73s
+klusterlet-addon-policyctrl-config-policy-cfcbcd7fd-s2btc   1/1     Running   0          40s
+klusterlet-addon-policyctrl-framework-d8998884-9lf2v        3/3     Running   0          40s
+klusterlet-addon-search-755665bb5f-jlpj4                    1/1     Running   0          39s
+klusterlet-addon-workmgr-5cf6cd4955-r579w                   1/1     Running   0          38s
+----
+
+image::./images/acm-import-5.png[][Ready]
 
 
 #### Clean Up
