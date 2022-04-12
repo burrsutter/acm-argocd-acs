@@ -371,18 +371,28 @@ https://github.com/stolostron/cm-cli/releases
 https://cloud.redhat.com/blog/bring-your-own-fleet-with-red-hat-advanced-cluster-management-for-kubernetes-auto-import-and-automation-tools
 
 ----
-cm attach cluster blr1 --cluster-kubeconfig=/Users/burr/xKS/.kubeconfig/doks1-config --context=do-blr1-blr1-kubernetes
+cm attach cluster blr1 --cluster-kubeconfig=/Users/burr/devnation/doks-argocd/.kube/config-blr1 --cluster-kubecontext=do-blr1-blr1-kubernetes
 ----
 
 ----
-cm attach cluster gke1 --cluster-kubeconfig=/Users/burr/xKS/.kubeconfig/gke1-config --context=gke_alohaburr_us-central1-c_gke1
+cm attach cluster gke1 --cluster-kubeconfig=/Users/burr/xKS/.kubeconfig/gke1-config --cluster-kubecontext=gke_ocp42project_europe-west3-a_gke1
 ----
+
+----
+cm attach cluster ams3 --cluster-kubeconfig=/Users/burr/devnation/doks-argocd/.kube/config-ams3 --cluster-kubecontext=do-ams3-ams3-kubernetes
+----
+
+----
+cm attach cluster tor1 --cluster-kubeconfig=/Users/burr/devnation/doks-argocd/.kube/config-tor1 --cluster-kubecontext=do-tor1-tor1-kubernetes
+----
+
 
 #### Extras
 
 ----
-kubectl label managedcluster ams3 cloud=Alibaba
-kubectl label managedcluster blr1 cloud=Azure
+kubectl label managedcluster ams3 cloud=Alibaba --overwrite
+kubectl label managedcluster blr1 cloud=VMWare --overwrite
+kubectl label managedcluster tor1 cloud=IBM --overwrite
 
 kubectl label managedcluster lon1 cloud=VSphere
 kubectl label managedcluster sgp1 cloud=IBM
@@ -397,13 +407,13 @@ kubectl label managedcluster sally cloud=Google
 
 ----
 export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-ams3
-doctl kubernetes cluster create ams3-kubernetes --region ams3 --node-pool="name=worker-pool;count=2"
+doctl kubernetes cluster create ams3-kubernetes --region ams3 --node-pool="name=worker-pool;count=3"
 
 export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-lon1
-doctl kubernetes cluster create lon1-kubernetes --region lon1 --node-pool="name=worker-pool;count=2"
+doctl kubernetes cluster create lon1-kubernetes --region lon1 --node-pool="name=worker-pool;count=3"
 
 export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-sgp1
-doctl kubernetes cluster create sgp1-kubernetes --region sgp1 --node-pool="name=worker-pool;count=2"
+doctl kubernetes cluster create sgp1-kubernetes --region sgp1 --node-pool="name=worker-pool;count=3"
 ----
 
 ----
