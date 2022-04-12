@@ -1,4 +1,4 @@
-## Importing Clusters
+# Importing Clusters (Manual)
 
 Importing of clusters such as GKE, AKS, EKS or DOKS
 
@@ -364,10 +364,35 @@ https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_managemen
 https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.4/html/install/installing#advanced-config-hub
 
 
+# Importing Clusters (Auto)
+
+https://github.com/stolostron/cm-cli/releases
+
+https://cloud.redhat.com/blog/bring-your-own-fleet-with-red-hat-advanced-cluster-management-for-kubernetes-auto-import-and-automation-tools
+
+----
+cm attach cluster blr1 --cluster-kubeconfig=/Users/burr/xKS/.kubeconfig/doks1-config --context=do-blr1-blr1-kubernetes
+----
+
+----
+cm attach cluster gke1 --cluster-kubeconfig=/Users/burr/xKS/.kubeconfig/gke1-config --context=gke_alohaburr_us-central1-c_gke1
+----
+
 #### Extras
 
 ----
-kubectl label managedcluster blr1 cloud=Amazon
+kubectl label managedcluster ams3 cloud=Alibaba
+kubectl label managedcluster blr1 cloud=Azure
+
+kubectl label managedcluster lon1 cloud=VSphere
+kubectl label managedcluster sgp1 cloud=IBM
+
+kubectl label managedcluster burr cloud=Amazon
+kubectl label managedcluster fred cloud=Azure
+kubectl label managedcluster sammy cloud=vSphere
+kubectl label managedcluster george cloud=IBM
+kubectl label managedcluster mary cloud=Alibaba
+kubectl label managedcluster sally cloud=Google
 ----
 
 ----
