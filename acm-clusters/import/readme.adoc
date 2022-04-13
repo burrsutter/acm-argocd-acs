@@ -417,6 +417,17 @@ doctl kubernetes cluster create sgp1-kubernetes --region sgp1 --node-pool="name=
 ----
 
 ----
+cat <<EOF | kubectl apply -f -
+apiVersion: cluster.open-cluster-management.io/v1alpha1
+kind: ClusterClaim
+metadata:
+  name: version.openshift.io
+spec:
+  value: 4.10.0-sho
+EOF
+----
+
+----
 # not tested
 export KUBECONFIG=/Users/burr/xKS/.kubeconfig/frankfurt
 
@@ -426,3 +437,11 @@ gcloud container clusters get-credentials frankfurt --zone europe-west3-a
 gcloud container clusters list
 ----
 
+
+Graviton
+----
+https://mirror.openshift.com/pub/openshift-v4/aarch64/clients/ocp/stable/openshift-install-mac-arm64.tar.gz
+
+codesign --deep --force -s - /Users/burr/openshift/graviton-bin/openshift-install
+
+----
