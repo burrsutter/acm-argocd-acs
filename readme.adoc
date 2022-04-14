@@ -1,5 +1,13 @@
 # ACM + ArgoCD (Gitops) + ACS
 
+image::./images/overview-1.png[][ACM Hub Overview]
+
+image::./images/overview-2.png[][ACM Hub Clusters]
+
+image::./images/overview-3.png[][ACS Dashboard]
+
+This first section focuses on the ACM Hub + OpenShift Gitops (ArgoCD) Integration.
+
 Install OpenShift 4.10.0 on Azure, AWS or GCP (or anywhere you have the authority and credit limit to do so)
 
 image::./images/ocp-1.png[][OpenShift]
