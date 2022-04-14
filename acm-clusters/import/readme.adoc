@@ -22,9 +22,11 @@ Importing of clusters such as GKE, AKS, EKS or DOKS
 Digital Ocean Kubernetes Service (DOKS)
 
 ----
-doctl kubernetes cluster create blr1-kubernetes --region blr1 --node-pool="name=worker-pool;count=2"
-export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-blr1
-doctl k8s cluster kubeconfig show blr1-kubernetes >> $KUBECONFIG
+export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-bangalore
+
+doctl kubernetes cluster create bangalore --region blr1 --node-pool="name=worker-pool;count=2"
+
+doctl k8s cluster kubeconfig show bangalore >> $KUBECONFIG
 
 doctl kubernetes cluster list
 ----
@@ -75,19 +77,19 @@ spec:
 EOF
 ----
 
-#### Create the ManagedCluster for BLR1 (DOKS)
+#### Create the ManagedCluster for bangalore (DOKS)
 
 ----
-kubectl create namespace blr1
-kubectl label namespace blr1 cluster.open-cluster-management.io/managedCluster=blr1
+kubectl create namespace bangalore
+kubectl label namespace bangalore cluster.open-cluster-management.io/managedCluster=bangalore
 ----
 
 ----
-cat <<EOF | kubectl -n blr1 apply -f -
+cat <<EOF | kubectl -n bangalore apply -f -
 apiVersion: cluster.open-cluster-management.io/v1
 kind: ManagedCluster
 metadata:
-  name: blr1
+  name: bangalore
 spec:
   hubAcceptsClient: true
 EOF
@@ -102,22 +104,22 @@ And watch your ManagedClusters
 ----
 watch kubectl get managedcluster
 NAME            HUB ACCEPTED   MANAGED CLUSTER URLS                    JOINED   AVAILABLE   AGE
-blr1            true                                                                        42s
+bangalore       true                                                                        42s
 local-cluster   true           https://api.iowa.burr-on-gcp.com:6443   True     True        104m
 ----
 
 Create the KlusterletAddonConfig
 
 ----
-cat <<EOF | kubectl -n blr1 apply -f -
+cat <<EOF | kubectl -n bangalore apply -f -
 apiVersion: agent.open-cluster-management.io/v1
 kind: KlusterletAddonConfig
 metadata:
-  name: blr1
-  namespace: blr1
+  name: bangalore
+  namespace: bangalore
 spec:
-  clusterName: blr1
-  clusterNamespace: blr1
+  clusterName: bangalore
+  clusterNamespace: bangalore
   applicationManager:
     enabled: true
   certPolicyController:
@@ -135,29 +137,29 @@ spec:
 EOF
 ----
 
-Extract the artifacts to be applied to the blr1 spoke cluster
+Extract the artifacts to be applied to the bangalore spoke cluster
 
 ----
-kubectl get secret blr1-import -n blr1 -o jsonpath={.data.crds\\.yaml} | base64 --decode > $HOME/blr1-klusterlet-crd.yaml
+kubectl get secret bangalore-import -n bangalore -o jsonpath={.data.crds\\.yaml} | base64 --decode > $HOME/bangalore-klusterlet-crd.yaml
 ----
 
 ----
-kubectl get secret blr1-import -n blr1 -o jsonpath={.data.import\\.yaml} | base64 --decode > $HOME/blr1-import.yaml
+kubectl get secret bangalore-import -n bangalore -o jsonpath={.data.import\\.yaml} | base64 --decode > $HOME/bangalore-import.yaml
 ----
 
 
-#### Update the BLR1 (DOKS) Cluster
+#### Update the bangalore (DOKS) Cluster
 
 Apply the CRD
 
 ----
-kubectl apply -f $HOME/blr1-klusterlet-crd.yaml
+kubectl apply -f $HOME/bangalore-klusterlet-crd.yaml
 ----
 
 Apply the import of the agent
 
 ----
-kubectl apply -f $HOME/blr1-import.yaml
+kubectl apply -f $HOME/bangalore-import.yaml
 ----
 
 watch kubectl get pods -n open-cluster-management-agent
@@ -195,7 +197,7 @@ image::./images/acm-import-4.png[][Ready]
 ----
 kubectl get managedcluster
 NAME            HUB ACCEPTED   MANAGED CLUSTER URLS                    JOINED   AVAILABLE   AGE
-blr1            true                                                   True     True        12m
+bangalore       true                                                   True     True        12m
 local-cluster   true           https://api.iowa.burr-on-gcp.com:6443   True     True        144m
 ----
 
@@ -204,10 +206,10 @@ Available True
 At this point you can add labels to see Apps deploy
 
 ----
-kubectl label managedcluster blr1 env=prod
+kubectl label managedcluster bangalore env=prod
 ----
 
-#### On the BLR1 Spoke
+#### On the bangalore Spoke
 
 ----
 kubectl get pods -n accounting
@@ -344,14 +346,14 @@ image::./images/acm-import-5.png[][Ready]
 Remove the labels to undeploy apps
 
 ----
-kubectl label managedcluster blr1 env-
+kubectl label managedcluster bangalore env-
 ----
 
 Destroy spoke clusters
 
 ----
 gcloud container clusters delete gke1 --zone us-central1-c --project alohaburr
-doctl k8s cluster delete blr1-kubernetes
+doctl k8s cluster delete bangalore
 ----
 
 
@@ -366,12 +368,14 @@ https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_managemen
 
 # Importing Clusters (Auto)
 
+Note: not working as of April 12 2022
+
 https://github.com/stolostron/cm-cli/releases
 
 https://cloud.redhat.com/blog/bring-your-own-fleet-with-red-hat-advanced-cluster-management-for-kubernetes-auto-import-and-automation-tools
 
 ----
-cm attach cluster blr1 --cluster-kubeconfig=/Users/burr/devnation/doks-argocd/.kube/config-blr1 --cluster-kubecontext=do-blr1-blr1-kubernetes
+cm attach cluster bangalore --cluster-kubeconfig=/Users/burr/devnation/doks-argocd/.kube/config-bangalore --cluster-kubecontext=do-blr1-blr1-kubernetes
 ----
 
 ----
@@ -389,31 +393,48 @@ cm attach cluster tor1 --cluster-kubeconfig=/Users/burr/devnation/doks-argocd/.k
 
 #### Extras
 
+For placeholder clusters
+
+Add two more DOKS
+
 ----
-kubectl label managedcluster ams3 cloud=Alibaba --overwrite
-kubectl label managedcluster blr1 cloud=VMWare --overwrite
-kubectl label managedcluster tor1 cloud=IBM --overwrite
+export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-shanghai
+doctl kubernetes cluster create shanghai --region sfo3 --node-pool="name=worker-pool;count=2"
 
-kubectl label managedcluster lon1 cloud=VSphere
-kubectl label managedcluster sgp1 cloud=IBM
-
-kubectl label managedcluster burr cloud=Amazon
-kubectl label managedcluster fred cloud=Azure
-kubectl label managedcluster sammy cloud=vSphere
-kubectl label managedcluster george cloud=IBM
-kubectl label managedcluster mary cloud=Alibaba
-kubectl label managedcluster sally cloud=Google
+export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-toronto
+doctl kubernetes cluster create toronto --region tor1 --node-pool="name=worker-pool;count=2"
 ----
 
 ----
-export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-ams3
-doctl kubernetes cluster create ams3-kubernetes --region ams3 --node-pool="name=worker-pool;count=3"
+kubectl label managedcluster shanghai observability=disabled --overwrite
+kubectl label managedcluster shanghai cloud=Alibaba --overwrite
+kubectl label managedcluster bangalore observability=disabled --overwrite
+kubectl label managedcluster bangalore cloud=VMWare --overwrite
+kubectl label managedcluster toronto observability=disabled --overwrite
+kubectl label managedcluster toronto cloud=IBM --overwrite
+----
 
-export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-lon1
-doctl kubernetes cluster create lon1-kubernetes --region lon1 --node-pool="name=worker-pool;count=3"
+On Spokes that need a different version string
 
-export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-sgp1
-doctl kubernetes cluster create sgp1-kubernetes --region sgp1 --node-pool="name=worker-pool;count=3"
+----
+cat <<EOF | kubectl apply -f -
+apiVersion: cluster.open-cluster-management.io/v1alpha1
+kind: ClusterClaim
+metadata:
+  name: version.openshift.io
+spec:
+  value: 4.10.1
+EOF
+----
+
+#### Edge Nodes
+
+----
+export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-paris
+doctl kubernetes cluster create paris --region fra1 --node-pool="name=worker-pool;size=s-2vcpu-4gb;count=1"
+
+export KUBECONFIG=/Users/burr/devnation/doks-argocd/.kube/config-singapore
+doctl kubernetes cluster create singapore --region sgp1 --node-pool="name=worker-pool;size=s-2vcpu-4gb;count=1"
 ----
 
 ----
@@ -423,9 +444,10 @@ kind: ClusterClaim
 metadata:
   name: version.openshift.io
 spec:
-  value: 4.10.0-sho
+  value: 4.10.1-sno
 EOF
 ----
+
 
 ----
 # not tested
@@ -438,10 +460,14 @@ gcloud container clusters list
 ----
 
 
-Graviton
+#### Graviton
+
 ----
 https://mirror.openshift.com/pub/openshift-v4/aarch64/clients/ocp/stable/openshift-install-mac-arm64.tar.gz
 
 codesign --deep --force -s - /Users/burr/openshift/graviton-bin/openshift-install
 
+# works in my AWS Ireland, eu-west-1 region
+
+openshift-install --dir=in-aws-ireland create cluster
 ----

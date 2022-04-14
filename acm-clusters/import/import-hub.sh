@@ -13,6 +13,8 @@ apiVersion: cluster.open-cluster-management.io/v1
 kind: ManagedCluster
 metadata:
   name: $1
+  labels:
+    observability: disabled
 spec:
   hubAcceptsClient: true
 EOF
