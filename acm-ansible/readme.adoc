@@ -8,27 +8,57 @@ Install Ansible Automation Platform Operator
 * in ACM: Generate Secret
 * in ACM Generate Policy which references the Secret and Selects the correct Job
 
+This do something
+
+
 #### Steps
 
-On ACM Hub OCP 
 
-----
-kubectl apply -f https://raw.githubusercontent.com/ch-stark/install-aap/main/inputresources/installoperator.yaml
-----
+Ansible Automation Platform on top of OpenShift on top of AWS requires a larger worker node.  See troubleshooting section in main repo readme.adoc for more information on MachineSets but for now, just change the instance type and launch a new worker node.
 
-image::./images/acm-ansible-1.png[][Ansible Namespace]
+image::./images/acm-ansible-1.png[][OpenShift Node Instance Type]
 
-image::./images/acm-ansible-2.png[][Ansible Operator]
+image::./images/acm-ansible-2.png[][Operator Hub 1]
 
-----
-kubectl apply -f https://raw.githubusercontent.com/ch-stark/install-aap/main/inputresources/automation-controller.yaml
-----
+image::./images/acm-ansible-3.png[][Operator Hub 2]
 
-image::./images/acm-ansible-3.png[][Ansible Pods]
+image::./images/acm-ansible-4.png[][Operator Hub 3]
 
+image::./images/acm-ansible-5.png[][Operator Hub 4]
 
+image::./images/acm-ansible-6.png[][Create 1]
 
-#### Supporting Documentation (that is wrong)
+image::./images/acm-ansible-7.png[][Create 2]
+
+image::./images/acm-ansible-8.png[][Pods]
+
+image::./images/acm-ansible-9.png[][Secret]
+
+image::./images/acm-ansible-10.png[][Secret Copied]
+
+image::./images/acm-ansible-11.png[][Route]
+
+image::./images/acm-ansible-12.png[][Blank Screen]
+
+image::./images/acm-ansible-13.png[][Delete Pods]
+
+image::./images/acm-ansible-14.png[][Login]
+
+image::./images/acm-ansible-15.png[][Subscription]
+
+image::./images/acm-ansible-16.png[][redhat.com user, password]
+
+image::./images/acm-ansible-17.png[][Developer subscription]
+
+image::./images/acm-ansible-18.png[][Next]
+
+image::./images/acm-ansible-19.png[][Next]
+
+image::./images/acm-ansible-20.png[][Submit]
+
+image::./images/acm-ansible-21.png[][Dashboard]
+
+#### Supporting Documentation
 
 https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.1/html/red_hat_ansible_automation_platform_operator_installation_guide/assembly-install-aap-operator
 
