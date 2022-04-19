@@ -1,12 +1,17 @@
 ## Ansible Integration with ACM
 
-Install Ansible Automation Platform Operator
+Assumes you have installed OpenShift and ACM Hub
 
-Configure Ansible Automation Platform
+. Install Ansible Automation Platform Operator
+. Configure Ansible Automation Platform (AAP)
+. Create AAP Application
+. Generate Token for Admin User
+. ACM Add credential
+. ACM Create Ansible Template
+. ACM Map Ansible Template to AAP Job Template
 
-Configure ACM
 
-The mission is to integrate ACM Hub with Ansible Automation Platform so Ansible Playbooks execute before or after a cluster creation or upgrade
+The mission is to integrate ACM Hub with Ansible Automation Platform so Ansible Playbooks execute before or after a cluster creation or upgrade.  The result should look something like the following
 
 image::./images/acm-ansible-86.png[][ACM+Ansible]
 
