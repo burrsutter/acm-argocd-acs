@@ -2,16 +2,16 @@
 
 Install Ansible Automation Platform Operator
 
-* configuration of Controller
-* Subscription to AAP
-* Generate Token
-* in ACM: Generate Secret
-* in ACM Generate Policy which references the Secret and Selects the correct Job
+Configure Ansible Automation Platform
 
-This do something
+Configure ACM
+
+The mission is to integrate ACM Hub with Ansible Automation Platform so Ansible Playbooks execute before or after a cluster creation or upgrade
+
+image::./images/acm-ansible-86.png[][ACM+Ansible]
 
 
-#### Steps
+#### Steps for Ansible Installation
 
 
 Ansible Automation Platform on top of OpenShift on top of AWS requires a larger worker node.  See troubleshooting section in main repo readme.adoc for more information on MachineSets but for now, just change the instance type and launch a new worker node.
@@ -57,6 +57,82 @@ image::./images/acm-ansible-19.png[][Next]
 image::./images/acm-ansible-20.png[][Submit]
 
 image::./images/acm-ansible-21.png[][Dashboard]
+
+
+#### Ansible integrated with ACM
+
+Inside of Ansible, create an Application
+
+image::./images/acm-ansible-60.png[][Add Application 1]
+
+image::./images/acm-ansible-61.png[][Add Application 2]
+
+image::./images/acm-ansible-63.png[][Add Application 3]
+
+Inside of Ansible, go to the default Admin user
+
+image::./images/acm-ansible-64.png[][Admin]
+
+image::./images/acm-ansible-65.png[][Tokens]
+
+image::./images/acm-ansible-66.png[][Add Token]
+
+Pick the Application and make the Scope "Write"
+
+image::./images/acm-ansible-67.png[][Application and Scope]
+
+Click Save and keep a copy of the tokens
+
+image::./images/acm-ansible-68.png[][Tokens]
+
+Inside of ACM, add a credential
+
+image::./images/acm-ansible-70.png[][Add Credentials]
+
+image::./images/acm-ansible-71.png[][Red Hat Ansible Automation Platform]
+
+image::./images/acm-ansible-72.png[][Basic Credentials]
+
+image::./images/acm-ansible-73.png[][Ansible Tower Host & Token]
+
+The token from Ansible
+
+image::./images/acm-ansible-74.png[][Remember the Token?]
+
+image::./images/acm-ansible-75.png[][Add]
+
+image::./images/acm-ansible-76.png[][Added]
+
+Create ACM's Ansible Job Template
+
+image::./images/acm-ansible-77.png[][Create Ansible Template]
+
+Enter a name, pick the previously created credential
+
+image::./images/acm-ansible-78.png[][Configure Ansible Template]
+
+image::./images/acm-ansible-79.png[][Post-install Ansible job templates]
+
+image::./images/acm-ansible-80.png[][Pick the Ansible Job Template]
+
+image::./images/acm-ansible-81.png[][Save]
+
+image::./images/acm-ansible-82.png[][Next]
+
+Ignoring Upgrades for now
+
+image::./images/acm-ansible-83.png[][Next]
+
+image::./images/acm-ansible-84.png[][Add]
+
+Now go Create a Cluster, get to Step 6 in the wizard
+
+image::./images/acm-ansible-85.png[][Cluster Creation]
+
+Repeat the steps to pull in all the Ansible Job Templates needed
+
+image::./images/acm-ansible-86.png[][Cluster Creation with Ansible]
+
 
 #### Supporting Documentation
 
