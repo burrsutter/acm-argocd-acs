@@ -314,6 +314,35 @@ The "localz" comes from mystuff/overlays/local-cluster.  The name of that folder
 
 ToDo: Add more clusters
 
+#### Supporting Documentation
+
+https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.4/html/applications/managing-applications#gitops-config
+
+
+https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.4/html/applications/managing-applications#applicationset
+
+https://cloud.redhat.com/blog/red-hat-advanced-cluster-management-with-openshift-gitops
+
+
+## ACM Cluster Imports 
+
+https://github.com/burrsutter/acm-argocd-acs/tree/main/acm-clusters/import[ACM Cluster Imports]
+
+## ACM Apps
+
+https://github.com/burrsutter/acm-argocd-acs/tree/main/acm-apps[ACM Apps]
+
+and
+
+https://github.com/burrsutter/lotsofapps/tree/main/apps[Lots of Apps]
+
+## ACM Ansible
+
+https://github.com/burrsutter/acm-argocd-acs/tree/main/acm-ansible[ACM Ansible]
+
+## ACM Metrics
+
+https://github.com/burrsutter/acm-argocd-acs/tree/main/acm-metrics[ACM Metrics]
 
 ## ACS/StackRox
 
