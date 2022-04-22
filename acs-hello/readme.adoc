@@ -215,6 +215,9 @@ Back on ACS Central UI,
 
 image::./images/acs-18.png[][Go to Compliance]
 
+The actual numbers in the dashboard will vary depending on the number of active CVEs there are right this moment.  This data is constantly updating based on the age of your OpenShift and the things that have been deployed into your base cluster.
+
+
 Go To Compliance
 
 Scan Environment
