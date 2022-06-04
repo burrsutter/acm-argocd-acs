@@ -15,7 +15,7 @@ spec:
     spec:
       project: "default"
       source:
-        repoURL: https://github.com/burrsutter/acm-argocd.git
+        repoURL: https://github.com/burrsutter/acm-argocd-acs.git
         targetRevision: main
         path: 'mystuff/overlays/{{name}}'
       destination:

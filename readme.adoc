@@ -204,6 +204,7 @@ local-cluster   true           https://api.london.burr-on-azr.com:6443   True   
 Check the Placement - look for True and AllDecisionsScheduled
 
 ----
+kubectl get placement local-cluster -n openshift-gitops
 NAME            SUCCEEDED   REASON                  SELECTEDCLUSTERS
 local-cluster   True        AllDecisionsScheduled   1
 
