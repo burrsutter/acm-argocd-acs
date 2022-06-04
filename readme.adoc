@@ -164,8 +164,8 @@ openshift-gitops-server-686956bfd-7k4jf                      1/1     Running   0
 You can simply just add the main/current cluster as a spoke/managed cluster but using a different technique.
 
 ----
-git clone https://github.com/burrsutter/acm-argocd
-cd acm-argocd
+git clone https://github.com/burrsutter/acm-argocd-acs
+cd acm-argocd-acs
 kubectl apply -f managedclusterset.yaml -n openshift-gitops
 kubectl apply -f gitopscluster.yaml -n openshift-gitops
 ----
